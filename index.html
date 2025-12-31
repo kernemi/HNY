@@ -5,65 +5,53 @@
   <title>Happy New Year</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+<body style="
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#141e30,#243b55);
+  font-family:'Segoe UI',Arial,sans-serif;
+  overflow:hidden;
+">
 
-<body
-  style="
-    margin:0;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,#141e30,#243b55);
-    font-family:'Segoe UI',Arial,sans-serif;
-    overflow:hidden;
-  "
->
+  <!-- Glow -->
+  <div style="
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:radial-gradient(circle,#ffdd99,transparent 70%);
+    filter:blur(140px);
+    animation:pulse 4s infinite alternate;
+  "></div>
 
-  <!-- Soft glow -->
-  <div
-    style="
-      position:absolute;
-      width:500px;
-      height:500px;
-      background:radial-gradient(circle,#ffdd99,transparent 70%);
-      filter:blur(140px);
-      animation:pulse 4s infinite alternate;
-    "
-  ></div>
-
-  <!-- Main Card -->
-  <div
-    id="card"
-    style="
-      position:relative;
-      padding:45px 55px;
-      border-radius:24px;
-      background:rgba(255,255,255,0.12);
-      backdrop-filter:blur(14px);
-      box-shadow:0 0 45px rgba(255,215,0,0.4);
-      text-align:center;
-      color:white;
-      min-width:300px;
-    "
-  >
+  <!-- Card -->
+  <div id="card" style="
+    position:relative;
+    padding:45px 55px;
+    border-radius:24px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(14px);
+    box-shadow:0 0 45px rgba(255,215,0,0.4);
+    text-align:center;
+    color:white;
+    min-width:300px;
+  ">
     <h1 style="margin:0 0 10px;font-size:2.3rem;letter-spacing:2px;">
       🎇 NEW YEAR COUNTDOWN
     </h1>
-
     <p style="margin:0 0 25px;font-size:0.9rem;opacity:0.8;">
       US Eastern Time 🇺🇸
     </p>
 
-    <div
-      id="countdown"
-      style="
-        display:flex;
-        gap:15px;
-        justify-content:center;
-        font-size:2.1rem;
-        font-weight:bold;
-      "
-    >
+    <div id="countdown" style="
+      display:flex;
+      gap:15px;
+      justify-content:center;
+      font-size:2.1rem;
+      font-weight:bold;
+    ">
       <div>
         <div id="h">00</div>
         <div style="font-size:0.7rem;opacity:0.7;">HRS</div>
@@ -80,18 +68,14 @@
       </div>
     </div>
 
-    <div
-      id="message"
-      style="
-        margin-top:30px;
-        font-size:1.1rem;
-        color:#ffd700;
-        letter-spacing:1px;
-      "
-    ></div>
+    <div id="message" style="
+      margin-top:30px;
+      font-size:1.1rem;
+      color:#ffd700;
+      letter-spacing:1px;
+    "></div>
   </div>
 
-  <!-- Animation -->
   <style>
     @keyframes pulse {
       from { transform:scale(1); opacity:0.6; }
@@ -99,32 +83,23 @@
     }
   </style>
 
-  <!-- Corrected Script -->
   <script>
-    function getUSEasternNow() {
-      return new Date(
-        new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
-      );
-    }
+    // US Eastern is UTC-5, or UTC-4 for DST (we'll use standard for NY New Year)
+    // Jan 1, 2026 00:00:00 EST is UTC: 2026-01-01T05:00:00Z
+    const newYearUTC = new Date('2026-01-01T05:00:00Z').getTime();
 
-    function getNextNewYearUSEastern() {
-      const nowET = getUSEasternNow();
-      const nextYear = nowET.getFullYear() + 1;
-      return new Date(
-        new Date(`${nextYear}-01-01T00:00:00`).toLocaleString("en-US", {
-          timeZone: "America/New_York"
-        })
-      );
-    }
+    const countdownEl = document.getElementById('countdown');
+    const hEl = document.getElementById('h');
+    const mEl = document.getElementById('m');
+    const sEl = document.getElementById('s');
+    const cardEl = document.getElementById('card');
 
-    const newYearET = getNextNewYearUSEastern().getTime();
-
-    setInterval(() => {
-      const nowET = getUSEasternNow().getTime();
-      const diff = newYearET - nowET;
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const diff = newYearUTC - now;
 
       if (diff <= 0) {
-        document.getElementById("card").innerHTML = `
+        cardEl.innerHTML = `
           <h1 style="font-size:2.6rem;margin-bottom:20px;">🎉 HAPPY NEW YEAR! 🎉</h1>
           <p style="font-size:1.3rem;line-height:1.6;">
             🎆 Wishing our family a year full of <br>
@@ -136,14 +111,17 @@
         return;
       }
 
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const hours = Math.floor(diff / (1000*60*60));
+      const minutes = Math.floor((diff / (1000*60)) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
 
-      document.getElementById("h").innerHTML = String(hours).padStart(2,'0');
-      document.getElementById("m").innerHTML = String(minutes).padStart(2,'0');
-      document.getElementById("s").innerHTML = String(seconds).padStart(2,'0');
-    }, 1000);
+      hEl.textContent = String(hours).padStart(2,'0');
+      mEl.textContent = String(minutes).padStart(2,'0');
+      sEl.textContent = String(seconds).padStart(2,'0');
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   </script>
 
 </body>
