@@ -99,37 +99,39 @@
     }
   </style>
 
-  <!-- Script -->
+  <!-- Corrected Script -->
   <script>
-    function getNewYearUSEastern() {
-      const now = new Date();
-      const year = now.getUTCFullYear() + 1;
+    function getUSEasternNow() {
       return new Date(
-        new Date(`${year}-01-01T00:00:00`).toLocaleString("en-US", {
-          timeZone: "America/New_York"
-        })
-      ).getTime();
+        new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
+      );
     }
 
-    const newYearTime = getNewYearUSEastern();
+    function getNextNewYearUSEastern() {
+      const nowET = getUSEasternNow();
+      const nextYear = nowET.getFullYear() + 1;
+      return new Date(
+        new Date(`${nextYear}-01-01T00:00:00`).toLocaleString("en-US", {
+          timeZone: "America/New_York"
+        })
+      );
+    }
+
+    const newYearET = getNextNewYearUSEastern().getTime();
 
     setInterval(() => {
-      const now = new Date().getTime();
-      const diff = newYearTime - now;
+      const nowET = getUSEasternNow().getTime();
+      const diff = newYearET - nowET;
 
       if (diff <= 0) {
         document.getElementById("card").innerHTML = `
-          <h1 style="font-size:2.6rem;margin-bottom:20px;">
-            🎉 HAPPY NEW YEAR! 🎉
-          </h1>
+          <h1 style="font-size:2.6rem;margin-bottom:20px;">🎉 HAPPY NEW YEAR! 🎉</h1>
           <p style="font-size:1.3rem;line-height:1.6;">
             🎆 Wishing our family a year full of <br>
             💖 love, 😄 laughter, 🌟 success <br>
             and 🫂 togetherness
           </p>
-          <p style="margin-top:20px;font-size:1.1rem;">
-            🧸✨ We love you ✨🧸
-          </p>
+          <p style="margin-top:20px;font-size:1.1rem;">🧸✨ We love you ✨🧸</p>
         `;
         return;
       }
