@@ -5,22 +5,26 @@
   <title>Happy New Year</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body style="
   margin:0;
-  height:100vh;
+  min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
   background:linear-gradient(135deg,#141e30,#243b55);
   font-family:'Segoe UI',Arial,sans-serif;
   overflow:hidden;
+  padding:20px;
 ">
 
   <!-- Glow -->
   <div style="
     position:absolute;
-    width:500px;
-    height:500px;
+    width:60vw;
+    height:60vw;
+    max-width:500px;
+    max-height:500px;
     background:radial-gradient(circle,#ffdd99,transparent 70%);
     filter:blur(140px);
     animation:pulse 4s infinite alternate;
@@ -29,84 +33,105 @@
   <!-- Card -->
   <div id="card" style="
     position:relative;
-    padding:45px 55px;
+    width:100%;
+    max-width:420px;
+    padding:35px 25px;
     border-radius:24px;
     background:rgba(255,255,255,0.12);
     backdrop-filter:blur(14px);
     box-shadow:0 0 45px rgba(255,215,0,0.4);
     text-align:center;
     color:white;
-    min-width:300px;
   ">
-    <h1 style="margin:0 0 10px;font-size:2.3rem;letter-spacing:2px;">
+
+    <h1 style="
+      margin:0 0 10px;
+      font-size:clamp(1.6rem,5vw,2.3rem);
+      letter-spacing:2px;
+    ">
       🎇 NEW YEAR COUNTDOWN
     </h1>
-    <p style="margin:0 0 25px;font-size:0.9rem;opacity:0.8;">
+
+    <p style="
+      margin:0 0 25px;
+      font-size:clamp(0.8rem,3.5vw,0.95rem);
+      opacity:0.8;
+    ">
       US Eastern Time 🇺🇸
     </p>
 
     <div id="countdown" style="
       display:flex;
-      gap:15px;
       justify-content:center;
-      font-size:2.1rem;
+      align-items:center;
+      gap:12px;
       font-weight:bold;
+      font-size:clamp(1.8rem,7vw,2.4rem);
     ">
       <div>
         <div id="h">00</div>
-        <div style="font-size:0.7rem;opacity:0.7;">HRS</div>
+        <div style="font-size:0.65rem;opacity:0.7;">HRS</div>
       </div>
       <div>:</div>
       <div>
         <div id="m">00</div>
-        <div style="font-size:0.7rem;opacity:0.7;">MIN</div>
+        <div style="font-size:0.65rem;opacity:0.7;">MIN</div>
       </div>
       <div>:</div>
       <div>
         <div id="s">00</div>
-        <div style="font-size:0.7rem;opacity:0.7;">SEC</div>
+        <div style="font-size:0.65rem;opacity:0.7;">SEC</div>
       </div>
     </div>
 
     <div id="message" style="
-      margin-top:30px;
-      font-size:1.1rem;
+      margin-top:25px;
+      font-size:clamp(1rem,4vw,1.15rem);
       color:#ffd700;
       letter-spacing:1px;
     "></div>
   </div>
 
+  <!-- Animations -->
   <style>
     @keyframes pulse {
       from { transform:scale(1); opacity:0.6; }
       to { transform:scale(1.25); opacity:1; }
     }
+
+    /* Extra spacing on very small phones */
+    @media (max-width: 360px) {
+      #countdown { gap:8px; }
+    }
   </style>
 
+  <!-- Script -->
   <script>
-    // US Eastern is UTC-5, or UTC-4 for DST (we'll use standard for NY New Year)
-    // Jan 1, 2026 00:00:00 EST is UTC: 2026-01-01T05:00:00Z
+    // Jan 1, 2026 00:00:00 US Eastern = 2026-01-01T05:00:00Z
     const newYearUTC = new Date('2026-01-01T05:00:00Z').getTime();
 
-    const countdownEl = document.getElementById('countdown');
     const hEl = document.getElementById('h');
     const mEl = document.getElementById('m');
     const sEl = document.getElementById('s');
     const cardEl = document.getElementById('card');
 
     function updateCountdown() {
-      const now = new Date().getTime();
+      const now = Date.now();
       const diff = newYearUTC - now;
 
       if (diff <= 0) {
         cardEl.innerHTML = `
-          <h1 style="font-size:2.6rem;margin-bottom:20px;">🎉 HAPPY NEW YEAR! 🎉</h1>
-          <p style="font-size:1.3rem;line-height:1.6;">
-            🎆 Wishing our family a year full of <br>
-            💖 love, 😄 laughter, 🌟 success <br>
+          <h1 style="font-size:clamp(2rem,7vw,2.6rem);margin-bottom:20px;">
+            🎉 HAPPY NEW YEAR! 🎉
+          </h1>
+          <p style="font-size:clamp(1.1rem,4.5vw,1.3rem);line-height:1.6;">
+            🎆 Wishing our family a year full of<br>
+            💖 love, 😄 laughter, 🌟 success<br>
             and 🫂 togetherness
           </p>
-          <p style="margin-top:20px;font-size:1.1rem;">🧸✨ We love you ✨🧸</p>
+          <p style="margin-top:20px;font-size:clamp(1rem,4vw,1.1rem);">
+            🧸✨ We love you ✨🧸
+          </p>
         `;
         return;
       }
