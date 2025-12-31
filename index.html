@@ -1,32 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>New Year Countdown</title>
+  <meta charset="UTF-8">
+  <title>Happy New Year</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body
+  style="
+    margin:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#141e30,#243b55);
+    font-family:'Segoe UI',Arial,sans-serif;
+    overflow:hidden;
+  "
+>
+
+  <!-- Soft glow -->
+  <div
+    style="
+      position:absolute;
+      width:500px;
+      height:500px;
+      background:radial-gradient(circle,#ffdd99,transparent 70%);
+      filter:blur(140px);
+      animation:pulse 4s infinite alternate;
+    "
+  ></div>
+
+  <!-- Main Card -->
+  <div
+    id="card"
+    style="
+      position:relative;
+      padding:45px 55px;
+      border-radius:24px;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(14px);
+      box-shadow:0 0 45px rgba(255,215,0,0.4);
+      text-align:center;
+      color:white;
+      min-width:300px;
+    "
+  >
+    <h1 style="margin:0 0 10px;font-size:2.3rem;letter-spacing:2px;">
+      🎇 NEW YEAR COUNTDOWN
+    </h1>
+
+    <p style="margin:0 0 25px;font-size:0.9rem;opacity:0.8;">
+      US Eastern Time 🇺🇸
+    </p>
+
+    <div
+      id="countdown"
+      style="
+        display:flex;
+        gap:15px;
+        justify-content:center;
+        font-size:2.1rem;
+        font-weight:bold;
+      "
+    >
+      <div>
+        <div id="h">00</div>
+        <div style="font-size:0.7rem;opacity:0.7;">HRS</div>
+      </div>
+      <div>:</div>
+      <div>
+        <div id="m">00</div>
+        <div style="font-size:0.7rem;opacity:0.7;">MIN</div>
+      </div>
+      <div>:</div>
+      <div>
+        <div id="s">00</div>
+        <div style="font-size:0.7rem;opacity:0.7;">SEC</div>
+      </div>
+    </div>
+
+    <div
+      id="message"
+      style="
+        margin-top:30px;
+        font-size:1.1rem;
+        color:#ffd700;
+        letter-spacing:1px;
+      "
+    ></div>
+  </div>
+
+  <!-- Animation -->
   <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial;
-      font-size: 3rem;
+    @keyframes pulse {
+      from { transform:scale(1); opacity:0.6; }
+      to { transform:scale(1.25); opacity:1; }
     }
   </style>
-</head>
-<body>
-  <div id="countdown"></div>
 
+  <!-- Script -->
   <script>
-    const newYear = new Date("Jan 1, 2026 00:00:00").getTime();
+    function getNewYearUSEastern() {
+      const now = new Date();
+      const year = now.getUTCFullYear() + 1;
+      return new Date(
+        new Date(`${year}-01-01T00:00:00`).toLocaleString("en-US", {
+          timeZone: "America/New_York"
+        })
+      ).getTime();
+    }
+
+    const newYearTime = getNewYearUSEastern();
+
     setInterval(() => {
       const now = new Date().getTime();
-      const diff = newYear - now;
-      const hours = Math.floor((diff / (1000 * 60 * 60)));
+      const diff = newYearTime - now;
+
+      if (diff <= 0) {
+        document.getElementById("card").innerHTML = `
+          <h1 style="font-size:2.6rem;margin-bottom:20px;">
+            🎉 HAPPY NEW YEAR! 🎉
+          </h1>
+          <p style="font-size:1.3rem;line-height:1.6;">
+            🎆 Wishing our family a year full of <br>
+            💖 love, 😄 laughter, 🌟 success <br>
+            and 🫂 togetherness
+          </p>
+          <p style="margin-top:20px;font-size:1.1rem;">
+            🧸✨ We love you ✨🧸
+          </p>
+        `;
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
-      document.getElementById("countdown").innerHTML =
-        `${hours}h ${minutes}m ${seconds}s`;
+
+      document.getElementById("h").innerHTML = String(hours).padStart(2,'0');
+      document.getElementById("m").innerHTML = String(minutes).padStart(2,'0');
+      document.getElementById("s").innerHTML = String(seconds).padStart(2,'0');
     }, 1000);
   </script>
+
 </body>
 </html>
